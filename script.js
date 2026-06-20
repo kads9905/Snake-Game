@@ -1,4 +1,9 @@
 const board = document.querySelector('.board');
+const startButton = document.querySelector('.btn-start');
+const modal = document.querySelector('.modal');
+const startGameModal = document.querySelector('.start-game');
+const gameOverModal = document.querySelector('.game-over');
+const restartButton = document.querySelector('.btn-restart');
 const highScoreElement = document.querySelector('#high-score');
 const scorElement = document.querySelector('#score');
 const timeElement = document.querySelector('#time');
@@ -22,6 +27,7 @@ let direction = 'right';
 let highScore = localStorage.getItem("highscore") || 0;
 let score = 0;
 let time = '00:00';
+let intervalId = null;
 let timerIntervalId = null;
 
 highScoreElement.innerText = highScore;
@@ -93,6 +99,11 @@ function render(){
     ){
         clearInterval(intervalId);
         clearInterval(timerIntervalId);
+
+        modal.style.display = "flex";
+        startGameModal.style.display = "none";
+        gameOverModal.style.display = "flex";
+
         return;
     }
 
@@ -107,7 +118,12 @@ function render(){
         ){
             clearInterval(intervalId);
             clearInterval(timerIntervalId);
-            return;
+
+            modal.style.display = "flex";
+            startGameModal.style.display = "none";
+            gameOverModal.style.display = "flex";
+
+return;
         }
     }
 
@@ -150,11 +166,6 @@ function render(){
         });
 }
 
-startTimer();
-
-let intervalId = setInterval(() => {
-    render();
-}, 300);
 
 addEventListener("keydown", (event) => {
 
@@ -175,3 +186,24 @@ addEventListener("keydown", (event) => {
     }
 
 });
+
+startButton.addEventListener("click", () => {
+
+    modal.style.display = "none";
+
+    intervalId = setInterval(() => {
+        render();
+    }, 300);
+
+    startTimer();
+
+});
+
+
+restartButton.addEventListener("click", restartGame);
+
+function restartGame(){
+
+    location.reload();
+
+}
