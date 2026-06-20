@@ -1,6 +1,7 @@
 const board = document.querySelector('.board');
 const highScoreElement = document.querySelector('#high-score');
 const scorElement = document.querySelector('#score');
+const timeElement = document.querySelector('#time');
 
 const blockHeight = 50;
 const blockWidth = 50;
@@ -20,6 +21,8 @@ let direction = 'right';
 
 let highScore = localStorage.getItem("highscore") || 0;
 let score = 0;
+let time = '00:00';
+let timerIntervalId = null;
 
 highScoreElement.innerText = highScore;
 
@@ -39,6 +42,28 @@ for(let row = 0; row < rows; row++){
 
         blocks[`${row}-${col}`] = block;
     }
+}
+
+function startTimer(){
+
+    timerIntervalId = setInterval(() => {
+
+        let [min, sec] = time.split(":").map(Number);
+
+        if(sec == 59){
+            min++;
+            sec = 0;
+        }else{
+            sec++;
+        }
+
+        time =
+        `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+
+        timeElement.innerText = time;
+
+    }, 1000);
+
 }
 
 function render(){
@@ -61,12 +86,13 @@ function render(){
     }
 
     if(
-        head.x < 0 ||
-        head.y < 0 ||
-        head.x >= rows ||
-        head.y >= cols
+    head.x < 0 ||
+    head.y < 0 ||
+    head.x >= rows ||
+    head.y >= cols
     ){
         clearInterval(intervalId);
+        clearInterval(timerIntervalId);
         return;
     }
 
@@ -80,6 +106,7 @@ function render(){
             segment.y === head.y
         ){
             clearInterval(intervalId);
+            clearInterval(timerIntervalId);
             return;
         }
     }
@@ -123,6 +150,7 @@ function render(){
         });
 }
 
+startTimer();
 
 let intervalId = setInterval(() => {
     render();
