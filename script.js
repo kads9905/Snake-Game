@@ -65,7 +65,7 @@ let timerIntervalId = null;
 
 highScoreElement.innerText = highScore;
 
-food = generateFood();
+let food = generateFood();
 
 for(let row = 0; row < rows; row++){
     for(let col = 0; col < cols; col++){
@@ -196,23 +196,23 @@ return;
 
 addEventListener("keydown", (event) => {
 
-    if(event.key === "ArrowUp"){
+    if(event.key === "ArrowUp" && direction != "down"){
         direction = "up";
         highlightKey(upKey);
 
     }
 
-    else if(event.key === "ArrowRight"){
+    else if(event.key === "ArrowRight" && direction != "left"){
         direction = "right";
         highlightKey(rightKey);
     }
 
-    else if(event.key === "ArrowLeft"){
+    else if(event.key === "ArrowLeft" && direction != "right"){
         direction = "left";
         highlightKey(leftKey);
     }
 
-    else if(event.key === "ArrowDown"){
+    else if(event.key === "ArrowDown" && direction != "up"){
         direction = "down";
         highlightKey(downKey);
     }
