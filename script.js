@@ -1,10 +1,13 @@
 const board = document.querySelector('.board');
+const highScoreElement = document.querySelector('#high-score');
+const scorElement = document.querySelector('#score');
 
 const blockHeight = 50;
 const blockWidth = 50;
 
 const cols = Math.floor(board.clientWidth / blockWidth);
 const rows = Math.floor(board.clientHeight / blockHeight);
+
 
 const blocks = [];
 
@@ -14,6 +17,11 @@ let snake = [{
 }];
 
 let direction = 'right';
+
+let highScore = localStorage.getItem("highscore") || 0;
+let score = 0;
+
+highScoreElement.innerText = highScore;
 
 let food = {
     x: Math.floor(Math.random() * rows),
@@ -52,9 +60,29 @@ function render(){
         head = {x: snake[0].x + 1, y: snake[0].y};
     }
 
+    if(
+        head.x < 0 ||
+        head.y < 0 ||
+        head.x >= rows ||
+        head.y >= cols
+    ){
+        clearInterval(intervalId);
+        return;
+    }
+
     snake.forEach(segment => {
         blocks[`${segment.x}-${segment.y}`].classList.remove("fill");
     });
+    
+    for(let segment of snake){
+        if(
+            segment.x === head.x &&
+            segment.y === head.y
+        ){
+            clearInterval(intervalId);
+            return;
+        }
+    }
 
     if(head.x === food.x && head.y === food.y){
 
@@ -66,6 +94,22 @@ function render(){
         };
 
         snake.unshift(head);
+
+        score += 1;
+
+        scorElement.innerText = score;
+
+        if(score > highScore){
+
+            highScore = score;
+
+            localStorage.setItem(
+                "highscore",
+                highScore.toString()
+            );
+
+            highScoreElement.innerText = highScore;
+        }
 
         }else{
             snake.unshift(head);
@@ -80,7 +124,7 @@ function render(){
 }
 
 
-setInterval(() => {
+let intervalId = setInterval(() => {
     render();
 }, 300);
 
