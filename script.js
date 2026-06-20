@@ -18,15 +18,17 @@ const blockWidth = 50;
 const cols = Math.floor(board.clientWidth / blockWidth);
 const rows = Math.floor(board.clientHeight / blockHeight);
 
+console.log(rows, cols);
+
 
 const blocks = [];
 
 let snake = [{
-    x: 0,
+    x: 1,
     y: 3
 }];
 
-let direction = 'right';
+let direction = 'down';
 
 function highlightKey(keyElement){
 
@@ -153,7 +155,7 @@ function render(){
             startGameModal.style.display = "none";
             gameOverModal.style.display = "flex";
 
-return;
+            return;
         }
     }
 
@@ -234,8 +236,32 @@ startButton.addEventListener("click", () => {
 
 restartButton.addEventListener("click", restartGame);
 
-function restartGame(){
+function restartGame() {
+    clearInterval(intervalId);
+    clearInterval(timerIntervalId);
 
-    location.reload();
+    blocks[`${food.x}-${food.y}`].classList.remove("food");
 
+    snake.forEach(segment => {
+        blocks[`${segment.x}-${segment.y}`].classList.remove("fill");
+    });
+
+    score = 0;
+    time = '00:00';
+    direction = "down";
+
+    scorElement.innerText = score;
+    timeElement.innerText = time;
+    highScoreElement.innerText = highScore;
+
+    modal.style.display = "none";
+
+    snake = [{ x: 1, y: 3 }];
+    food = generateFood();
+
+    intervalId = setInterval(() => {
+        render();
+    }, 300);
+
+    startTimer();
 }
