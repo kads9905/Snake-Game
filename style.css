@@ -36,6 +36,15 @@ section{
 }
 
 .board{
-    flex-grow:1;
     border:1px solid #333;
+    flex-grow:1;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(50px,1fr));
+    grid-template-rows:repeat(auto-fill, minmax(50px,1fr));
+}
+
+.block{
+    border:1px solid #333;
+    border-radius:50%;
 }
