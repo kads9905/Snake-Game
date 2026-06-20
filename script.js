@@ -7,6 +7,10 @@ const restartButton = document.querySelector('.btn-restart');
 const highScoreElement = document.querySelector('#high-score');
 const scorElement = document.querySelector('#score');
 const timeElement = document.querySelector('#time');
+const upKey = document.querySelector('#up-key');
+const downKey = document.querySelector('#down-key');
+const leftKey = document.querySelector('#left-key');
+const rightKey = document.querySelector('#right-key');
 
 const blockHeight = 50;
 const blockWidth = 50;
@@ -24,6 +28,35 @@ let snake = [{
 
 let direction = 'right';
 
+function highlightKey(keyElement){
+
+    keyElement.classList.add('active');
+
+    setTimeout(() => {
+        keyElement.classList.remove('active');
+    }, 300);
+
+}
+
+function generateFood(){
+
+    let newFood;
+
+    do{
+        newFood = {
+            x: Math.floor(Math.random() * rows),
+            y: Math.floor(Math.random() * cols)
+        };
+    } while(
+        snake.some(segment =>
+            segment.x === newFood.x &&
+            segment.y === newFood.y
+        )
+    );
+
+    return newFood;
+}
+
 let highScore = localStorage.getItem("highscore") || 0;
 let score = 0;
 let time = '00:00';
@@ -32,10 +65,7 @@ let timerIntervalId = null;
 
 highScoreElement.innerText = highScore;
 
-let food = {
-    x: Math.floor(Math.random() * rows),
-    y: Math.floor(Math.random() * cols)
-};
+food = generateFood();
 
 for(let row = 0; row < rows; row++){
     for(let col = 0; col < cols; col++){
@@ -131,10 +161,7 @@ return;
 
         blocks[`${food.x}-${food.y}`].classList.remove("food");
 
-        food = {
-            x: Math.floor(Math.random() * rows),
-            y: Math.floor(Math.random() * cols)
-        };
+        food = generateFood();
 
         snake.unshift(head);
 
@@ -171,18 +198,23 @@ addEventListener("keydown", (event) => {
 
     if(event.key === "ArrowUp"){
         direction = "up";
+        highlightKey(upKey);
+
     }
 
     else if(event.key === "ArrowRight"){
         direction = "right";
+        highlightKey(rightKey);
     }
 
     else if(event.key === "ArrowLeft"){
         direction = "left";
+        highlightKey(leftKey);
     }
 
     else if(event.key === "ArrowDown"){
         direction = "down";
+        highlightKey(downKey);
     }
 
 });
